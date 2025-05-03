@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalkulationsrechner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .container {
+      background-color: #fff;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .container h2 {
+      text-align: center;
+      color: #007acc;
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.95em;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007acc;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #007acc;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kalkulationsrechner</h1>
+  
+  <!-- Verkaufskalkulation -->
+  <div class="container">
+    <h2>Verkaufskalkulation</h2>
+    <label for="selbstkosten">Selbstkosten (€):</label>
+    <input type="number" id="selbstkosten" step="0.01" min="0" placeholder="z. B. 870">
+    
+    <label for="gewinnProzent">Gewinn (%):</label>
+    <input type="number" id="gewinnProzent" step="0.01" min="0" placeholder="z. B. 25">
+    
+    <label for="rabattVerkauf">Kundenrabatt (%):</label>
+    <input type="number" id="rabattVerkauf" step="0.01" min="0" placeholder="z. B. 7">
+    
+    <label for="skontoVerkauf">Kundenskonto (Skonto) (%):</label>
+    <input type="number" id="skontoVerkauf" step="0.01" min="0" placeholder="z. B. 2.5">
+    
+    <button onclick="calculateVerkauf()">Verkaufskalkulation berechnen</button>
+    <div class="result" id="verkaufResult"></div>
+  </div>
+  
+  <!-- Einkaufskalkulation -->
+  <div class="container">
+    <h2>Einkaufskalkulation</h2>
+    <label for="nettoeinkauf">Netto-Einkaufspreis (€):</label>
+    <input type="number" id="nettoeinkauf" step="0.01" min="0" placeholder="z. B. 80">
+    
+    <label for="nebenkosten">Nebenkosten (%):</label>
+    <input type="number" id="nebenkosten" step="0.01" min="0" placeholder="z. B. 5">
+    
+    <label for="skontoEinkauf">Skonto (%):</label>
+    <input type="number" id="skontoEinkauf" step="0.01" min="0" placeholder="z. B. 2">
+    
+    <label for="rabattEinkauf">Rabatt (%):</label>
+    <input type="number" id="rabattEinkauf" step="0.01" min="0" placeholder="z. B. 3">
+    
+    <button onclick="calculateEinkauf()">Einkaufskalkulation berechnen</button>
+    <div class="result" id="einkaufResult"></div>
+  </div>
+  
+  <!-- Differenzkalkulation -->
+  <div class="container">
+    <h2>Differenzkalkulation</h2>
+    <label for="verkaufspreisDiff">Verkaufspreis (netto) (€):</label>
+    <input type="number" id="verkaufspreisDiff" step="0.01" min="0" placeholder="z. B. 150">
+    
+    <label for="rabattDiff">Rabatt auf Verkauf (%):</label>
+    <input type="number" id="rabattDiff" step="0.01" min="0" placeholder="z. B. 10">
+    
+    <label for="einkaufspreisDiff">Einkaufspreis (netto) (€):</label>
+    <input type="number" id="einkaufspreisDiff" step="0.01" min="0" placeholder="z. B. 100">
+    
+    <label for="skontoDiff">Skonto auf Einkauf (%):</label>
+    <input type="number" id="skontoDiff" step="0.01" min="0" placeholder="z. B. 2">
+    
+    <button onclick="calculateDifferenz()">Differenzkalkulation berechnen</button>
+    <div class="result" id="differenzResult"></div>
+  </div>
+  
+  <!-- Mehrwertsteuer-Rechner -->
+  <div class="container">
+    <h2>Mehrwertsteuer-Rechner</h2>
+    <label for="mwstNetto">Netto-Betrag (€):</label>
+    <input type="number" id="mwstNetto" step="0.01" min="0" placeholder="z. B. 100">
+    <button onclick="calculateMWSTBrutto()">Netto → Brutto</button>
+    
+    <label for="mwstBrutto">Brutto-Betrag (€):</label>
+    <input type="number" id="mwstBrutto" step="0.01" min="0" placeholder="z. B. 119">
+    <button onclick="calculateMWSTNetto()">Brutto → Netto</button>
+    <div class="result" id="mwstResult"></div>
+  </div>
+  
+  <!-- Schema (Angebotskalkulation) -->
+  <div class="container">
+    <h2>Schema (Angebotskalkulation)</h2>
+    <button onclick="calculateSchema()">Schema berechnen</button>
+    <div id="schemaTable"></div>
+  </div>
+  
+  <script>
+    const taxRate = 0.19;
+    
+    // Hilfsfunktion: Erzeugt eine HTML-Tabelle aus einem 2D-Array [Beschreibung, Betrag, Prozent].
+    function createTable(data) {
+      let table = "<table><tr><th>Beschreibung</th><th>Betrag (€)</th><th>Prozent (%)</th></tr>";
+      data.forEach(row => {
+        table += `<tr><td>${row[0]}</td><td>${row[1].toFixed(2)}</td><td>${row[2]}</td></tr>`;
+      });
+      table += "</table>";
+      return table;
+    }
+    
+    // Verkaufskalkulation: Berechne Zielpreise anhand von Selbstkosten, Gewinn%, Kundenrabatt (%) und Skonto (%)
+    function calculateVerkauf() {
+      const selbstkosten = parseFloat(document.getElementById("selbstkosten").value);
+      const gewinnProzent = parseFloat(document.getElementById("gewinnProzent").value);
+      const rabatt = parseFloat(document.getElementById("rabattVerkauf").value);
+      const skonto = parseFloat(document.getElementById("skontoVerkauf").value);
+      
+      if (isNaN(selbstkosten) || isNaN(gewinnProzent) || isNaN(rabatt) || isNaN(skonto)) {
+        document.getElementById("verkaufResult").innerHTML = "Bitte alle Felder gültig ausfüllen.";
+        return;
+      }
+      
+      // Gewinn (absolut)
+      const gewinn = selbstkosten * (gewinnProzent / 100);
+      // Barverkaufspreis = Selbstkosten + Gewinn
+      const barverkaufspreis = selbstkosten + gewinn;
+      // Kundenskonto (als absoluter Wert, berechnet als Prozentsatz vom Barverkaufspreis)
+      const kundenskonto = barverkaufspreis * (skonto / 100);
+      // Zielverkaufspreis = Barverkaufspreis + Kundenskonto
+      const zielverkaufspreis = barverkaufspreis + kundenskonto;
+      // Kundenrabatt (als absoluter Wert, berechnet als Prozentsatz vom Zielverkaufspreis)
+      const kundenrabatt = zielverkaufspreis * (rabatt / 100);
+      // Listenverkaufspreis = Zielverkaufspreis + Kundenrabatt
+      const listenverkaufspreis = zielverkaufspreis + kundenrabatt;
+      
+      const data = [
+        ["Selbstkostenpreis", selbstkosten, "100"],
+        ["+ Gewinn", gewinn, gewinnProzent],
+        ["= Barverkaufspreis", barverkaufspreis, "-"],
+        ["+ Kundenskonto (Skonto)", kundenskonto, skonto],
+        ["= Zielverkaufspreis", zielverkaufspreis, "-"],
+        ["+ Kundenrabatt", kundenrabatt, rabatt],
+        ["= Listenverkaufspreis", listenverkaufspreis, "-"]
+      ];
+      document.getElementById("verkaufResult").innerHTML = createTable(data);
+    }
+    
+    // Einkaufskalkulation: Berechnet anhand des Netto-Einkaufspreises, inkl. Nebenkosten, Skonto und Rabatt.
+    function calculateEinkauf() {
+      const nettoEinkauf = parseFloat(document.getElementById("nettoeinkauf").value);
+      const nebenkosten = parseFloat(document.getElementById("nebenkosten").value);
+      const skontoEinkauf = parseFloat(document.getElementById("skontoEinkauf").value);
+      const rabattEinkauf = parseFloat(document.getElementById("rabattEinkauf").value);
+      
+      if (isNaN(nettoEinkauf) || isNaN(nebenkosten) || isNaN(skontoEinkauf) || isNaN(rabattEinkauf)) {
+        document.getElementById("einkaufResult").innerHTML = "Bitte alle Felder gültig ausfüllen.";
+        return;
+      }
+      
+      const nebenkostenBetrag = nettoEinkauf * (nebenkosten / 100);
+      const zwischenSumme = nettoEinkauf + nebenkostenBetrag;
+      const skontoBetrag = zwischenSumme * (skontoEinkauf / 100);
+      const nachSkonto = zwischenSumme - skontoBetrag;
+      const rabattBetrag = nachSkonto * (rabattEinkauf / 100);
+      const finalPreis = nachSkonto - rabattBetrag;
+      
+      const taxAmount = finalPreis * taxRate;
+      const bruttoPreis = finalPreis + taxAmount;
+      
+      const data = [
+        ["Netto-Einkaufspreis", nettoEinkauf, "-"],
+        ["+ Nebenkosten", nebenkostenBetrag, nebenkosten],
+        ["= Zwischensumme", zwischenSumme, "-"],
+        ["- Skonto", skontoBetrag, skontoEinkauf],
+        ["- Rabatt", rabattBetrag, rabattEinkauf],
+        ["= Netto-Einkaufspreis (final)", finalPreis, "-"],
+        ["+ Steuer (19%)", taxAmount, "-"],
+        ["= Brutto-Einkaufspreis", bruttoPreis, "-"]
+      ];
+      document.getElementById("einkaufResult").innerHTML = createTable(data);
+    }
+    
+    // Differenzkalkulation:
+    // Vergleicht den effektiven Verkaufspreis (nach Abzug von Kundenrabatt) mit dem effektiven Einkaufspreis (nach Skonto).
+    function calculateDifferenz() {
+      const verkaufspreisDiff = parseFloat(document.getElementById("verkaufspreisDiff").value);
+      const rabattDiff = parseFloat(document.getElementById("rabattDiff").value);
+      const einkaufspreisDiff = parseFloat(document.getElementById("einkaufspreisDiff").value);
+      const skontoDiff = parseFloat(document.getElementById("skontoDiff").value);
+      
+      if (isNaN(verkaufspreisDiff) || isNaN(rabattDiff) || isNaN(einkaufspreisDiff) || isNaN(skontoDiff)) {
+        document.getElementById("differenzResult").innerHTML = "Bitte alle Felder gültig ausfüllen.";
+        return;
+      }
+      
+      const effectiveSale = verkaufspreisDiff * (1 - rabattDiff / 100);
+      const saleTax = effectiveSale * taxRate;
+      const saleBrutto = effectiveSale + saleTax;
+      
+      const effectiveEinkauf = einkaufspreisDiff * (1 - skontoDiff / 100);
+      const purchaseTax = effectiveEinkauf * taxRate;
+      const purchaseBrutto = effectiveEinkauf + purchaseTax;
+      
+      const profitNetto = effectiveSale - effectiveEinkauf;
+      const profitTax = profitNetto * taxRate;
+      const profitBrutto = profitNetto + profitTax;
+      const profitSpanne = effectiveSale !== 0 ? (profitNetto / effectiveSale) * 100 : 0;
+      
+      const data = [
+        ["Effektiver Verkaufspreis (netto)", effectiveSale, rabattDiff],
+        ["+ Steuer (19%)", saleTax, "-"],
+        ["= Brutto Verkaufspreis", saleBrutto, "-"],
+        ["Effektiver Einkaufspreis (netto)", effectiveEinkauf, skontoDiff],
+        ["+ Steuer (19%)", purchaseTax, "-"],
+        ["= Brutto Einkaufspreis", purchaseBrutto, "-"],
+        ["Gewinn (netto)", profitNetto, "-"],
+        ["+ Steuer Gewinn (19%)", profitTax, "-"],
+        ["= Brutto Gewinn", profitBrutto, "-"],
+        ["Gewinnspanne (%)", profitSpanne, "-"]
+      ];
+      document.getElementById("differenzResult").innerHTML = createTable(data);
+    }
+    
+    // Mehrwertsteuer-Rechner: Netto → Brutto
+    function calculateMWSTBrutto() {
+      const netto = parseFloat(document.getElementById("mwstNetto").value);
+      if (isNaN(netto)) {
+        document.getElementById("mwstResult").innerHTML = "Bitte einen gültigen Netto-Betrag eingeben.";
+        return;
+      }
+      const taxAmount = netto * taxRate;
+      const brutto = netto + taxAmount;
+      const data = [
+        ["Netto-Betrag", netto, "-"],
+        ["+ Steuer (19%)", taxAmount, "-"],
+        ["= Brutto-Betrag", brutto, "-"]
+      ];
+      document.getElementById("mwstResult").innerHTML = createTable(data);
+    }
+    
+    // Mehrwertsteuer-Rechner: Brutto → Netto
+    function calculateMWSTNetto() {
+      const brutto = parseFloat(document.getElementById("mwstBrutto").value);
+      if (isNaN(brutto)) {
+        document.getElementById("mwstResult").innerHTML = "Bitte einen gültigen Brutto-Betrag eingeben.";
+        return;
+      }
+      const netto = brutto / (1 + taxRate);
+      const taxAmount = brutto - netto;
+      const data = [
+        ["Brutto-Betrag", brutto, "-"],
+        ["- Steuer (19%)", taxAmount, "-"],
+        ["= Netto-Betrag", netto, "-"]
+      ];
+      document.getElementById("mwstResult").innerHTML = createTable(data);
+    }
+    
+    // Schema (Angebotskalkulation): Berechnet und zeigt die Schritte:
+    // Selbstkostenpreis + Gewinn = Barverkaufspreis;  + Kundenskonto = Zielverkaufspreis;  + Kundenrabatt = Listenverkaufspreis
+    function calculateSchema() {
+      const selbstkosten = parseFloat(document.getElementById("selbstkosten").value);
+      const gewinnProzent = parseFloat(document.getElementById("gewinnProzent").value);
+      const rabatt = parseFloat(document.getElementById("rabattVerkauf").value);
+      const skonto = parseFloat(document.getElementById("skontoVerkauf").value);
+      
+      if (isNaN(selbstkosten) || isNaN(gewinnProzent) || isNaN(rabatt) || isNaN(skonto)) {
+        document.getElementById("schemaTable").innerHTML = "Bitte füllen Sie im Bereich Verkaufskalkulation alle Felder aus, um das Schema zu berechnen.";
+        return;
+      }
+      
+      const gewinn = selbstkosten * (gewinnProzent / 100);
+      const barverkaufspreis = selbstkosten + gewinn;
+      const kundenskonto = barverkaufspreis * (skonto / 100);
+      const zielverkaufspreis = barverkaufspreis + kundenskonto;
+      const kundenrabatt = zielverkaufspreis * (rabatt / 100);
+      const listenverkaufspreis = zielverkaufspreis + kundenrabatt;
+      
+      // Erstelle die Tabelle nach dem Schema:  
+      // Selbstkostenpreis | + Gewinn | = Barverkaufspreis | + Kundenskonto (Skonto) | = Zielverkaufspreis | + Kundenrabatt | = Listenverkaufspreis
+      const header = [
+        "Selbstkostenpreis", 
+        "+ Gewinn", 
+        "= Barverkaufspreis", 
+        "+ Kundenskonto (Skonto)", 
+        "= Zielverkaufspreis", 
+        "+ Kundenrabatt", 
+        "= Listenverkaufspreis"
+      ];
+      
+      // Hier bauen wir eine Zeile mit den Werten (Formatierung erfolgt auf 2 Dezimalstellen)
+      const values = [
+        selbstkosten,
+        gewinn,
+        barverkaufspreis,
+        kundenskonto,
+        zielverkaufspreis,
+        kundenrabatt,
+        listenverkaufspreis
+      ];
+      
+      // Erstelle die Tabelle als HTML
+      let table = "<table><tr>";
+      header.forEach(h => {
+        table += `<th>${h}</th>`;
+      });
+      table += "</tr><tr>";
+      values.forEach(v => {
+        table += `<td>${v.toFixed(2)}</td>`;
+      });
+      table += "</tr></table>";
+      
+      document.getElementById("schemaTable").innerHTML = table;
+    }
+  </script>
+</body>
+</html>
